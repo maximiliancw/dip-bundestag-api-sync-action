@@ -1,0 +1,23 @@
+name: dip-bundestag-api-sync-action
+description: Sync dip-bundestag-api repository with remote OpenAPI specification file based on ETag HTTP header
+runs:
+  using: "composite"
+  steps:
+    - name: Get ETag from remote resource
+      id: get_remote_etag
+      shell: bash
+      run: |
+        value=$(curl -sI https://search.dip.bundestag.de/api/v1/swagger-ui/ | awk '/etag/ {print $2}')
+        $value >> $GITHUB_OUTPUT
+
+    - name: Use cache
+      id: use_cache
+      uses: actions/cache@v3
+      with:
+          path: ./
+          key: ${{ steps.get_remote_etag.outputs.value }}
+      
+    - name: "Sync OpenAPI specs"
+      shell: bash
+      if: ${{ steps.use_cache.outputs.cache-hit != 'true' }}
+      run: curl https://search.dip.bundestag.de/api/v1/openapi.yaml > openapi.yaml
