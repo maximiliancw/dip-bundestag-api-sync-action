@@ -8,7 +8,7 @@ runs:
       shell: bash
       run: |
         value=$(curl -sI https://search.dip.bundestag.de/api/v1/swagger-ui/ | awk '/etag/ {print $2}')
-        $value >> $GITHUB_OUTPUT
+        echo "value=$value" >> $GITHUB_OUTPUT
 
     - name: Use cache
       id: use_cache
