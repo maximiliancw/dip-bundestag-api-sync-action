@@ -1,5 +1,5 @@
 name: dip-bundestag-api-sync-action
-description: Sync dip-bundestag-api repository with remote OpenAPI specification file based on ETag HTTP header
+description: Sync the bundesAPI/dip-bundestag-api repository with the remote OpenAPI specification file based on the resource's ETag HTTP header
 runs:
   using: "composite"
   steps:
