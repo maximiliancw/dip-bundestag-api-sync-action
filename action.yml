@@ -14,10 +14,10 @@ runs:
       id: use_cache
       uses: actions/cache@v4
       with:
-          path: ./
+          path: openapi.yaml
           key: ${{ steps.get_remote_etag.outputs.value }}
       
     - name: "Sync OpenAPI specs"
       shell: bash
-      if: ${{ steps.use_cache.outputs.cache-hit != 'true' }}
+      if: steps.use_cache.outputs.cache-hit != 'true'
       run: curl https://search.dip.bundestag.de/api/v1/openapi.yaml > openapi.yaml
