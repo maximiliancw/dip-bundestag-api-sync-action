@@ -8,6 +8,10 @@ runs:
       shell: bash
       run: |
         value=$(curl -sI https://search.dip.bundestag.de/api/v1/swagger-ui/ | awk 'BEGIN{IGNORECASE=1} /^etag:/ {gsub(/^[^:]*:[ \t]*/, ""); gsub(/["\r\n]/, ""); print $0}')
+        if [ -z "$value" ]; then
+          echo "Error: Could not retrieve ETag from https://search.dip.bundestag.de/api/v1/swagger-ui/"
+          exit 1
+        fi
         echo "value=$value" >> $GITHUB_OUTPUT
 
     - name: Use cache
@@ -20,4 +24,9 @@ runs:
     - name: "Sync OpenAPI specs"
       shell: bash
       if: steps.use_cache.outputs.cache-hit != 'true'
-      run: curl https://search.dip.bundestag.de/api/v1/openapi.yaml > openapi.yaml
+      run: |
+        if ! curl -f -s https://search.dip.bundestag.de/api/v1/openapi.yaml > openapi.yaml; then
+          echo "Error: Failed to download OpenAPI spec from https://search.dip.bundestag.de/api/v1/openapi.yaml"
+          exit 1
+        fi
+        echo "Successfully downloaded OpenAPI spec to openapi.yaml"
