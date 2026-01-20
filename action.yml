@@ -12,7 +12,7 @@ runs:
 
     - name: Use cache
       id: use_cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
           path: ./
           key: ${{ steps.get_remote_etag.outputs.value }}
