@@ -7,7 +7,7 @@ runs:
       id: get_remote_etag
       shell: bash
       run: |
-        value=$(curl -sI https://search.dip.bundestag.de/api/v1/swagger-ui/ | awk '/etag/ {print $2}')
+        value=$(curl -sI https://search.dip.bundestag.de/api/v1/swagger-ui/ | awk 'BEGIN{IGNORECASE=1} /^etag:/ {gsub(/^[^:]*:[ \t]*/, ""); gsub(/["\r\n]/, ""); print $0}')
         echo "value=$value" >> $GITHUB_OUTPUT
 
     - name: Use cache
